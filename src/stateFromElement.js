@@ -80,12 +80,13 @@ const getEntityData = (tagName: string, element: DOMElement) => {
     const attrMap = ELEM_ATTR_MAP[tagName];
     for (let i = 0; i < element.attributes.length; i++) {
       const attr = element.attributes[i];
-      let dataKey = attrMap[attr.name] || attr.name.match(/^data-([a-z0-9-]+)$/);
-      if (Array.isArray(dataKey)) {
-        dataKey = dataKey[0];
-      }
-      if (dataKey && attr.value !== null) {
-        data[dataKey] = attr.value;
+      const dataKey = attrMap[attr.name];
+      if (attr.value !== null) {
+        if (dataKey) {
+          data[dataKey] = attr.value;
+        } else if (/^data-([a-z0-9-]+)$/.test(attr.name)) {
+          data[attr.name] = attr.value;
+        }
       }
     }
   }
